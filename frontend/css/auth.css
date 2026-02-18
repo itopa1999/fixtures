@@ -1,0 +1,233 @@
+/* ========================================
+   AUTH PAGE STYLES
+   ======================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Inter", system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    background: #0b0d15; /* deep base */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow-x: hidden;
+    color: #eef2fb;
+}
+
+/* --- animated background shapes (interactive via JS) --- */
+.bg-shape {
+    position: fixed;
+    width: 70vmax;
+    height: 70vmax;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.5;
+    pointer-events: none; /* let mouse events pass through */
+    transition: transform 0.1s ease-out; /* smooth movement, not too jumpy */
+    will-change: transform;
+    z-index: 0;
+}
+
+.shape-1 {
+    background: radial-gradient(circle at 30% 30%, #4a3aff, #1e2c9c);
+    top: -15vh;
+    left: -10vw;
+    animation: float-slow 18s infinite alternate ease-in-out;
+}
+
+.shape-2 {
+    background: radial-gradient(circle at 70% 70%, #ff4d6d, #b10f3a);
+    bottom: -20vh;
+    right: -5vw;
+    width: 80vmax;
+    height: 80vmax;
+    animation: float-slow 22s infinite alternate-reverse ease-in-out;
+}
+
+@keyframes float-slow {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(3%, 4%) scale(1.05); }
+}
+
+/* subtle grain overlay (optional) */
+.grain {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJmIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc1IiBudW1PY3RhdmVzPSIzIiAvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbHRlcj0idXJsKCNmKSIgb3BhY2l0eT0iMC4wMjUiIC8+PC9zdmc+');
+    opacity: 0.2;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* --- login card (glassmorphism) --- */
+.login-container {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 420px;
+    margin: 1.5rem;
+}
+
+.login-card {
+    background: rgba(18, 22, 35, 0.65);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 2.5rem;
+    padding: 2.5rem 2rem;
+    box-shadow: 0 30px 50px -20px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+    transition: transform 0.25s ease, box-shadow 0.3s ease;
+}
+
+.login-card:hover {
+    box-shadow: 0 40px 60px -15px rgba(0, 10, 30, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+    transform: translateY(-4px);
+}
+
+h1 {
+    font-size: 2rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.25rem;
+    background: linear-gradient(130deg, #ffffff, #c0ccf0);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.subhead {
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: #9ba9d0;
+    margin-bottom: 2.25rem;
+    border-left: 3px solid #3d5afe;
+    padding-left: 1rem;
+}
+
+.input-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: #a6b3db;
+    margin-bottom: 0.6rem;
+}
+
+.input-field {
+    width: 100%;
+    background: rgba(8, 12, 22, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 2rem;
+    padding: 0.9rem 1.5rem;
+    font-size: 1rem;
+    font-family: inherit;
+    color: #f0f4ff;
+    outline: none;
+    transition: border 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.input-field:focus {
+    border-color: #5f7cff;
+    background: rgba(20, 28, 50, 0.8);
+    box-shadow: 0 0 0 3px rgba(95, 124, 255, 0.15);
+}
+
+.input-field::placeholder {
+    color: #5b688b;
+    font-weight: 300;
+    font-size: 0.95rem;
+}
+
+/* admin only – subtle badge */
+.admin-badge {
+    display: inline-block;
+    background: rgba(61, 90, 254, 0.2);
+    border: 1px solid rgba(95, 124, 255, 0.3);
+    border-radius: 30px;
+    padding: 0.2rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #b0c4ff;
+    margin-bottom: 1.8rem;
+}
+
+.login-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #3d5afe, #2945c4);
+    border: none;
+    border-radius: 3rem;
+    padding: 1rem 1.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 10px 20px -8px rgba(0, 20, 100, 0.5);
+    margin-top: 0.5rem;
+    letter-spacing: 0.5px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.login-btn:hover {
+    background: linear-gradient(135deg, #526cff, #304fdb);
+    transform: scale(1.02);
+    box-shadow: 0 15px 25px -8px #1e32a0;
+}
+
+.login-btn:active {
+    transform: scale(0.98);
+}
+
+/* note: no forgot password, no extras */
+.legal-note {
+    margin-top: 2rem;
+    font-size: 0.75rem;
+    color: #5f6e9b;
+    text-align: center;
+    border-top: 1px dashed rgba(255, 255, 255, 0.1);
+    padding-top: 1.5rem;
+}
+
+.legal-note span {
+    color: #99a8da;
+}
+
+/* responsiveness */
+@media (max-width: 480px) {
+    .login-card {
+        padding: 2rem 1.5rem;
+        border-radius: 2rem;
+    }
+    h1 {
+        font-size: 1.8rem;
+    }
+}
+
+/* simple fade-in animation for the card */
+.login-card {
+    animation: fadeUp 0.9s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    opacity: 0;
+    animation-delay: 0.1s;
+}
+
+@keyframes fadeUp {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+

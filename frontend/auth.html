@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tournament Admin · login</title>
+    <!-- modern font: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+
+    <!-- background interactive shapes (move with mouse) -->
+    <div class="bg-shape shape-1" id="shape1"></div>
+    <div class="bg-shape shape-2" id="shape2"></div>
+    <div class="grain"></div> <!-- subtle texture -->
+
+    <div class="login-container">
+        <div class="login-card">
+            <div class="admin-badge">⚙️ tournament admin</div>
+            <h1>Access portal</h1>
+            <div class="subhead">authorized personnel only</div>
+
+            <!-- login form – no extra fields, no "forgot password" -->
+            <form id="loginForm" action="#" method="post">
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input type="text" class="input-field" id="username" name="username" placeholder="admin / manager" autocomplete="off" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="input-field" id="password" name="password" placeholder="••••••••" autocomplete="off" required>
+                </div>
+
+                <button type="submit" class="login-btn">Log in to dashboard →</button>
+            </form>
+
+            <!-- simple demo hint (not part of real login) -->
+            <div class="legal-note">
+                <span>secure area</span> — demo: any credentials
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>

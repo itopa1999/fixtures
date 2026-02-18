@@ -25,6 +25,7 @@ DEFAULT_APPS = [
 ]
 
 CUSTOM_APPS = [
+    "apps.tour",
     # "apps.authentication",
     # "apps.customer",
     # "apps.vendor",

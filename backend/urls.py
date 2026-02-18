@@ -14,11 +14,11 @@ from backend.schema import BothHttpAndHttpsSchemaGenerator, swagger_protect
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="Default Base Backend API",
+        title="Tournament Fixtures API",
         default_version="v1",
-        description="API description for Default Base Backend",
+        description="API for managing competitive gaming tournaments with multiple formats support",
         terms_of_service="https://www.google.com/policies/terms/",
-        contact=openapi.Contact(email="contact@snippets.local"),
+        contact=openapi.Contact(email="contact@fixtures.local"),
         license=openapi.License(name="BSD License"),
     ),
     public=True,
@@ -29,8 +29,11 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('', RedirectView.as_view(url='/backdoor/', permanent=False)),
     path('backdoor/', admin.site.urls),
+    
+    # Tournament App
+    path('api/tour/', include('apps.tour.urls')),
+    path('api/admin/tour/', include('apps.tour.admin_urls')),
 
-    # path('auth/api/', include("apps.authentication.urls")),
     
     path(
         "doc/",
