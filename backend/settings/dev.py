@@ -10,11 +10,30 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": os.environ.get("DB_NAME"),
+#         "USER": os.environ.get("DB_USER"),
+#         "PASSWORD": os.environ.get("DB_PASSWORD"),
+#         "HOST": os.environ.get("DB_HOST", "localhost"),
+#         "PORT": os.environ.get("DB_PORT", "5432"),
+#     }
+# }
 
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_USE_SSL = True
+
+EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND")
+EMAIL_HOST = os.environ.get("EMAIL_HOST")
+EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS")
 EMAIL_PORT = os.environ.get("EMAIL_PORT")
-EMAIL_HOST_USER = os.environ.get("EMAIL_USER")
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_PASSWORD")
-DEFAULT_FROM_EMAIL = "no-reply@yourdomain.com"
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+EMAIL_FROM = os.environ.get("EMAIL_FROM")
+
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:5501",
+    "http://127.0.0.1:5501",
+    "http://192.168.0.199:5501",
+    "http://192.168.0.200:5501",
+    "http://192.168.0.198:5501",
+]

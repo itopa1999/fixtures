@@ -166,3 +166,6 @@ cython_debug/
 
 db-backup.json
 dump.rdb
+
+backups/
+logs/

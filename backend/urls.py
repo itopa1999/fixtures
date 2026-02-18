@@ -6,23 +6,30 @@ from drf_yasg import openapi
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.static import serve
+from django.views.generic import RedirectView
+
+from backend.schema import BothHttpAndHttpsSchemaGenerator, swagger_protect
+
 
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="Tool Connect API",
+        title="Default Base Backend API",
         default_version="v1",
-        description="API description for Tool Connect App",
+        description="API description for Default Base Backend",
         terms_of_service="https://www.google.com/policies/terms/",
         contact=openapi.Contact(email="contact@snippets.local"),
         license=openapi.License(name="BSD License"),
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),
+    generator_class=BothHttpAndHttpsSchemaGenerator,
 )
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path('', RedirectView.as_view(url='/backdoor/', permanent=False)),
+    path('backdoor/', admin.site.urls),
+
     # path('auth/api/', include("apps.authentication.urls")),
     
     path(
@@ -31,23 +38,26 @@ urlpatterns = [
             [
                 path(
                     "swagger/",
-                    schema_view.with_ui("swagger", cache_timeout=0),
+                    swagger_protect(schema_view.with_ui("swagger", cache_timeout=0)),
                     name="schema-swagger-ui",
                 ),
                 path(
                     "swagger.json",
-                    schema_view.without_ui(cache_timeout=0),
+                    swagger_protect(schema_view.without_ui(cache_timeout=0)),
                     name="schema-json",
                 ),
                 path(
                     "redoc/",
-                    schema_view.with_ui("redoc", cache_timeout=0),
+                    swagger_protect(schema_view.with_ui("redoc", cache_timeout=0)),
                     name="schema-redoc",
                 ),
             ]
         ),
     ),
-]
+] 
 
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
+# Serve static and media files based on DEBUG
+if not settings.DEBUG:  # Production / DEBUG = False
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+else:  # Development
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

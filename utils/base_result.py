@@ -30,5 +30,3 @@ class BaseResultWithData(BaseResult):
         base = super().to_dict()
         base["data"] = self.data
         return base
-
-
