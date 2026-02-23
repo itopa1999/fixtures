@@ -32,7 +32,7 @@ urlpatterns = [
     
     # Tournament App
     path('api/tour/', include('apps.tour.urls')),
-    path('api/admin/tour/', include('apps.tour.admin_urls')),
+    path('api/admin/', include('apps.tour.admin_urls')),
 
     
     path(

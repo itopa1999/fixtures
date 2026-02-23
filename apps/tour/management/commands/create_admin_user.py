@@ -30,6 +30,22 @@ class Command(BaseCommand):
                 continue
             break
 
+        # Get first name
+        while True:
+            first_name = self.get_input('Enter first name: ')
+            if not first_name:
+                self.stdout.write(self.style.WARNING('First name cannot be empty!'))
+                continue
+            break
+
+        # Get last name
+        while True:
+            last_name = self.get_input('Enter last name: ')
+            if not last_name:
+                self.stdout.write(self.style.WARNING('Last name cannot be empty!'))
+                continue
+            break
+
         # Get email
         while True:
             email = self.get_input('Enter email: ')
@@ -65,7 +81,8 @@ class Command(BaseCommand):
                 username=username,
                 email=email,
                 password=password,
-                is_staff=True,
+                first_name=first_name,
+                last_name=last_name,
                 is_superuser=False,  # Set to False, will add to admin group
             )
             self.stdout.write(self.style.SUCCESS(f'✓ User "{username}" created successfully!'))
@@ -85,6 +102,7 @@ class Command(BaseCommand):
         # Summary
         self.stdout.write('\n' + '=' * 50)
         self.stdout.write(self.style.SUCCESS('✓ Admin user setup complete!\n'))
+        self.stdout.write(f'Name: {self.style.WARNING(f"{first_name} {last_name}")}')
         self.stdout.write(f'Username: {self.style.WARNING(username)}')
         self.stdout.write(f'Email: {self.style.WARNING(email)}')
         self.stdout.write(f'Group: {self.style.WARNING(GroupName.ADMIN.value)}')

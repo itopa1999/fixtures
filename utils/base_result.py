@@ -7,6 +7,7 @@ class BaseResult:
         self.status_code = status_code
         self.message = message
         self.request_id = request_id or str(uuid.uuid4())
+        
     @property
     def is_success(self):
         """Returns True if status_code is in 2xx range"""

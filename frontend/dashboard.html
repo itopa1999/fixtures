@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tournament Admin · Dashboard</title>
+    <!-- Modern font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheets: Background first, then components -->
+    <link rel="stylesheet" href="css/background.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <!-- Background: Animated gradient, blobs, grid, glow -->
+    <div class="grid-overlay"></div>
+    <div class="glow-sphere"></div>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="particles" id="particles"></div>
+
+    <!-- Page content -->
+    <div class="content-wrapper">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <span class="sidebar-brand-icon">⚙️</span>
+                <span>Tournament</span>
+            </div>
+
+            <nav>
+                <ul class="sidebar-nav" id="sidebarNav">
+                    <!-- Navigation items generated dynamically from main.js -->
+                </ul>
+            </nav>
+
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Admin</div>
+                <ul class="sidebar-nav">
+                    <li class="sidebar-nav-item">
+                        <a href="#settings" class="sidebar-nav-link" data-page="settings">
+                            <span class="sidebar-nav-icon">⚙️</span>
+                            <span class="sidebar-nav-label">Settings</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Sidebar overlay for mobile -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- Sidebar toggle button for mobile -->
+        <button class="sidebar-toggle" id="sidebarToggle">☰</button>
+        <div class="dashboard-container">
+            <!-- Header -->
+            <div class="dashboard-header">
+                <h1>⚙️ Tournament Admin</h1>
+                <div style="display: flex; align-items: center; gap: 2rem;">
+                    <div class="user-info">
+                        <div class="user-avatar" id="userAvatar">A</div>
+                        <div style="display: flex; flex-direction: column;">
+                            <span style="font-weight: 600; color: #ffffff;" id="userName">Admin</span>
+                            <span style="font-size: 0.85rem; color: #a6b3db;" id="userEmail">admin@tournament.local</span>
+                        </div>
+                    </div>
+                    <button class="logout-btn" id="logoutBtn">Logout</button>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="dashboard-content">
+                <!-- Welcome Section -->
+                <div class="welcome-section">
+                    <h2>Welcome back, <span id="welcomeName">Admin</span>!</h2>
+                    <p>Manage tournaments, players, and matches from your dashboard</p>
+                </div>
+
+                <!-- ========================================
+                     OVERVIEW STATS SECTION
+                     ======================================== -->
+                <div class="stats-section">
+                    <h3>📊 Quick Overview</h3>
+                    <div class="cards-grid-4">
+                        <div class="card">
+                            <div class="card-stat">
+                                <div class="card-stat-value" id="totalTournaments">0</div>
+                                <div class="card-stat-label">Total Tournaments</div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-stat">
+                                <div class="card-stat-value" id="activeTournaments">0</div>
+                                <div class="card-stat-label">Active Now</div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-stat">
+                                <div class="card-stat-value" id="totalPlayers">0</div>
+                                <div class="card-stat-label">Total Players</div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-stat">
+                                <div class="card-stat-value" id="totalMatches">0</div>
+                                <div class="card-stat-label">Total Matches</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========================================
+                     ACTIVE TOURNAMENTS SECTION
+                     ======================================== -->
+                <div class="stats-section">
+                    <h3>🎮 Active Tournaments</h3>
+                    <div class="cards-grid" id="activeTournamentsContainer">
+                        <div class="card tournament-card">
+                            <span class="tournament-status status-active">Active</span>
+                            <div class="card-header">
+                                <div class="card-icon">🏆</div>
+                                <div>
+                                    <div class="card-title">Mortal Kombat Championship</div>
+                                    <div class="card-subtitle">Single Elimination</div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="tournament-info-row">
+                                    <span class="info-label">Players Registered:</span>
+                                    <span class="info-value">24 / 32</span>
+                                </div>
+                                <div class="tournament-info-row">
+                                    <span class="info-label">Current Round:</span>
+                                    <span class="info-value">Semi-Finals</span>
+                                </div>
+                                <div class="tournament-info-row">
+                                    <span class="info-label">Matches Today:</span>
+                                    <span class="info-value">4 / 4</span>
+                                </div>
+                                <div class="tournament-info-row">
+                                    <span class="info-label">Consoles In Use:</span>
+                                    <span class="info-value">2 / 3</span>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <span>Started 2h ago</span>
+                                <span class="badge badge-primary">View Details</span>
+                            </div>
+                        </div>
+
+                        <div class="card tournament-card">
+                            <span class="tournament-status status-registration">Registration</span>
+                            <div class="card-header">
+                                <div class="card-icon">👾</div>
+                                <div>
+                                    <div class="card-title">Street Fighter 6 Cup</div>
+                                    <div class="card-subtitle">Group Stage + Knockout</div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="tournament-info-row">
+                                    <span class="info-label">Players Registered:</span>
+                                    <span class="info-value">18 / 24</span>
+                                </div>
+                                <div class="tournament-info-row">
+                                    <span class="info-label">Status:</span>
+                                    <span class="info-value">Registration Open</span>
+                                </div>
+                                <div class="tournament-info-row">
+                                    <span class="info-label">Groups:</span>
+                                    <span class="info-value">6 groups (4 players each)</span>
+                                </div>
+                                <div class="tournament-info-row">
+                                    <span class="info-label">Start In:</span>
+                                    <span class="info-value">3 days</span>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <span>Created 5d ago</span>
+                                <span class="badge badge-warning">Manage</span>
+                            </div>
+                        </div>
+
+                        <div class="card tournament-card">
+                            <span class="tournament-status status-active">Active</span>
+                            <div class="card-header">
+                                <div class="card-icon">🎯</div>
+                                <div>
+                                    <div class="card-title">Double Elimination Qualifier</div>
+                                    <div class="card-subtitle">Double Elimination</div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="tournament-info-row">
+                                    <span class="info-label">Players Registered:</span>
+                                    <span class="info-value">16 / 16</span>
+                                </div>
+                                <div class="tournament-info-row">
+                                    <span class="info-label">Current Phase:</span>
+                                    <span class="info-value">Winners R2 / Losers R1</span>
+                                </div>
+                                <div class="tournament-info-row">
+                                    <span class="info-label">Matches Played:</span>
+                                    <span class="info-value">12 / 30</span>
+                                </div>
+                                <div class="tournament-info-row">
+                                    <span class="info-label">Completion:</span>
+                                    <span class="info-value">40%</span>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <span>Started 1d ago</span>
+                                <span class="badge badge-success">In Progress</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========================================
+                     RECENT MATCHES SECTION
+                     ======================================== -->
+                <div class="stats-section">
+                    <h3>🎮 Recent Matches</h3>
+                    <div class="card card-full">
+                        <div class="table-wrapper">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Tournament</th>
+                                        <th>Player 1</th>
+                                        <th>Score</th>
+                                        <th>Player 2</th>
+                                        <th>Round</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>MK Championship</strong></td>
+                                        <td>SonicFox</td>
+                                        <td>2 - 1</td>
+                                        <td>Dragon</td>
+                                        <td>Semi-Finals</td>
+                                        <td><span class="badge badge-success">Completed</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>MK Championship</strong></td>
+                                        <td>Rewind</td>
+                                        <td>1 - 2</td>
+                                        <td>Kombat</td>
+                                        <td>Semi-Finals</td>
+                                        <td><span class="badge badge-success">Completed</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Double Elim Qualifier</strong></td>
+                                        <td>Champion</td>
+                                        <td>2 - 0</td>
+                                        <td>Challenger</td>
+                                        <td>Winners R2</td>
+                                        <td><span class="badge badge-success">Completed</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Double Elim Qualifier</strong></td>
+                                        <td>Fighter42</td>
+                                        <td>0 - 0</td>
+                                        <td>Warrior</td>
+                                        <td>Winners R2</td>
+                                        <td><span class="badge badge-primary">Scheduled</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>SF6 Cup</strong></td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>Group A</td>
+                                        <td><span class="badge badge-warning">Pending</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========================================
+                     QUICK ACTIONS SECTION
+                     ======================================== -->
+                <div class="stats-section">
+                    <h3>⚡ Quick Actions</h3>
+                    <div class="cards-grid-2">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-icon">➕</div>
+                                <div class="card-title">Create Tournament</div>
+                            </div>
+                            <div class="card-body">
+                                Set up a new tournament with custom settings, format, and player limit.
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-primary btn-sm" style="width: auto;">Create New</button>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-icon">👥</div>
+                                <div class="card-title">Manage Players</div>
+                            </div>
+                            <div class="card-body">
+                                View, register, or remove players from active tournaments.
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-primary btn-sm" style="width: auto;">Manage</button>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-icon">📋</div>
+                                <div class="card-title">View Brackets</div>
+                            </div>
+                            <div class="card-body">
+                                Generate and view tournament brackets in real-time.
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-primary btn-sm" style="width: auto;">View</button>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-icon">📊</div>
+                                <div class="card-title">Reports & Stats</div>
+                            </div>
+                            <div class="card-body">
+                                Access detailed tournament statistics and performance reports.
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-primary btn-sm" style="width: auto;">Reports</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts: Core → Particles → Preloader → Dashboard -->
+    <script src="js/main.js"></script>
+    <script src="js/particles.js"></script>
+    <script>
+        if (typeof preloader !== 'undefined') preloader.show();
+    </script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

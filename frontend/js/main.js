@@ -1,4 +1,60 @@
 /* ========================================
+   COOKIE MANAGEMENT
+   ======================================== */
+
+/**
+ * Get cookie value by name
+ */
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+  return null;
+}
+
+// Set global variables from cookies
+window.userAccess = getCookie('access');
+window.userRefresh = getCookie('refresh');
+window.userEmail = getCookie('email');
+window.userName = getCookie('name');
+window.userGroups = getCookie('group');
+
+/* ========================================
+   OVERLAY STACK MANAGER - Track open modals/preloaders
+   ======================================== */
+
+class OverlayManager {
+  constructor() {
+    this.overlayCount = 0;
+  }
+
+  incrementOverlay() {
+    this.overlayCount++;
+    if (this.overlayCount === 1) {
+      // First overlay opened - disable body interactions
+      document.body.style.pointerEvents = 'none';
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  decrementOverlay() {
+    this.overlayCount--;
+    if (this.overlayCount <= 0) {
+      // All overlays closed - re-enable body interactions
+      this.overlayCount = 0;
+      document.body.style.pointerEvents = 'auto';
+      document.body.style.overflow = 'auto';
+    }
+  }
+
+  isActive() {
+    return this.overlayCount > 0;
+  }
+}
+
+const overlayManager = new OverlayManager();
+
+/* ========================================
    MODAL SYSTEM - Base Modal Class
    ======================================== */
 
@@ -24,11 +80,21 @@ class BaseModal {
     this.overlay = document.createElement('div');
     this.overlay.className = 'modal-overlay';
     this.overlay.id = `overlay-${this.id}`;
+    
+    // Prevent all interactions outside the modal (don't close on overlay click)
     this.overlay.addEventListener('click', (e) => {
-      if (e.target === this.overlay) {
-        this.close();
-      }
+      e.stopPropagation();
+      // Don't close the modal when clicking overlay
     });
+    
+    // Prevent scroll and interactions on body when modal is open
+    this.overlay.addEventListener('wheel', (e) => {
+      e.preventDefault();
+    }, { passive: false });
+    
+    this.overlay.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+    }, { passive: false });
 
     // Create modal
     this.element = document.createElement('div');
@@ -76,12 +142,35 @@ class BaseModal {
 
   open() {
     this.overlay.classList.add('show');
-    document.body.style.overflow = 'hidden';
+    
+    // Use overlay manager to track open overlays
+    overlayManager.incrementOverlay();
+    
+    // Ensure overlay and modal are always interactive
+    this.overlay.style.pointerEvents = 'auto';
+    this.element.style.pointerEvents = 'auto';
+    
+    // Close on ESC key
+    this.escHandler = (e) => {
+      if (e.key === 'Escape') {
+        this.close();
+      }
+    };
+    document.addEventListener('keydown', this.escHandler);
   }
 
   close() {
     this.overlay.classList.remove('show');
-    document.body.style.overflow = 'auto';
+    
+    // Use overlay manager to track open overlays
+    overlayManager.decrementOverlay();
+    
+    // Remove ESC handler
+    if (this.escHandler) {
+      document.removeEventListener('keydown', this.escHandler);
+      this.escHandler = null;
+    }
+    
     if (this.onCancel) {
       this.onCancel();
     }
@@ -97,7 +186,7 @@ class BaseModal {
     if (this.onConfirm) {
       this.onConfirm();
     }
-    this.close();
+    // Keep modal open - don't close automatically (user closes or page redirects)
   }
 }
 
@@ -267,6 +356,7 @@ class DialogueModal extends BaseModal {
 class Preloader {
   constructor() {
     this.element = null;
+    this.isVisible = false;
     this.init();
   }
 
@@ -275,18 +365,43 @@ class Preloader {
     this.element.className = 'preloader';
     this.element.id = 'app-preloader';
     this.element.innerHTML = '<div class="spinner"></div>';
+    
+    // Prevent interactions while preloader is active
+    this.element.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+    
+    this.element.addEventListener('wheel', (e) => {
+      e.preventDefault();
+    }, { passive: false });
+    
+    this.element.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+    }, { passive: false });
+    
     document.body.appendChild(this.element);
   }
 
   show() {
-    if (this.element) {
+    if (this.element && !this.isVisible) {
       this.element.classList.add('show');
+      this.isVisible = true;
+      
+      // Use overlay manager to track open overlays
+      overlayManager.incrementOverlay();
+      
+      // Ensure preloader is always interactive
+      this.element.style.pointerEvents = 'auto';
     }
   }
 
   hide() {
-    if (this.element) {
+    if (this.element && this.isVisible) {
       this.element.classList.remove('show');
+      this.isVisible = false;
+      
+      // Use overlay manager to track open overlays
+      overlayManager.decrementOverlay();
     }
   }
 
@@ -361,3 +476,151 @@ if (typeof module !== 'undefined' && module.exports) {
     showEditCreateForm,
   };
 }
+
+/* ========================================
+   MAIN BASEURL DECLARATION
+   ======================================== */
+
+window.BASE_URL = null;
+window.ADMIN_URL = "http://127.0.0.1:8000/api/admin/";
+
+/* ========================================
+   SIDEBAR NAVIGATION SYSTEM - Dynamic menu and page highlighting
+   ======================================== */
+
+class SidebarNavigation {
+  constructor() {
+    this.pages = [
+      { name: 'Dashboard', icon: '📊', path: 'dashboard.html', id: 'dashboard' },
+      { name: 'Tournaments', icon: '🏆', path: 'tournaments.html', id: 'tournaments' },
+      { name: 'Players', icon: '👥', path: 'players.html', id: 'players' },
+      { name: 'Matches', icon: '🎮', path: 'matches.html', id: 'matches' },
+      { name: 'Brackets', icon: '📋', path: 'brackets.html', id: 'brackets' },
+      { name: 'Reports', icon: '📊', path: 'reports.html', id: 'reports' },
+    ];
+
+    this.init();
+  }
+
+  init() {
+    document.addEventListener('DOMContentLoaded', () => {
+      this.renderMenu();
+      this.highlightCurrentPage();
+      this.setupMobileSidebar();
+    });
+  }
+
+  renderMenu() {
+    const sidebarNav = document.getElementById('sidebarNav');
+    if (!sidebarNav) return;
+
+    sidebarNav.innerHTML = '';
+
+    this.pages.forEach(page => {
+      const li = document.createElement('li');
+      li.className = 'sidebar-nav-item';
+      li.innerHTML = `
+        <a href="${page.path}" class="sidebar-nav-link" data-page="${page.id}">
+          <span class="sidebar-nav-icon">${page.icon}</span>
+          <span class="sidebar-nav-label">${page.name}</span>
+        </a>
+      `;
+      sidebarNav.appendChild(li);
+    });
+  }
+
+  highlightCurrentPage() {
+    const currentPage = this.getCurrentPageId();
+    const navLinks = document.querySelectorAll('.sidebar-nav-link');
+
+    navLinks.forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('data-page') === currentPage) {
+        link.classList.add('active');
+      }
+    });
+  }
+
+  getCurrentPageId() {
+    const path = window.location.pathname;
+    const filename = path.split('/').pop() || 'dashboard.html';
+    
+    // Extract page ID from filename
+    if (filename.includes('dashboard')) return 'dashboard';
+    if (filename.includes('tournament')) return 'tournaments';
+    if (filename.includes('player')) return 'players';
+    if (filename.includes('match')) return 'matches';
+    if (filename.includes('bracket')) return 'brackets';
+    if (filename.includes('report')) return 'reports';
+    
+    return 'dashboard'; // Default
+  }
+
+  setupMobileSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+    if (!sidebarToggle || !sidebar) return;
+
+    // Toggle sidebar on mobile
+    sidebarToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('mobile-open');
+      sidebarOverlay.classList.toggle('mobile-open');
+    });
+
+    // Close sidebar when clicking overlay
+    if (sidebarOverlay) {
+      sidebarOverlay.addEventListener('click', () => {
+        sidebar.classList.remove('mobile-open');
+        sidebarOverlay.classList.remove('mobile-open');
+      });
+    }
+
+    // Close sidebar when clicking a nav link
+    const navLinks = document.querySelectorAll('.sidebar-nav-link');
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        // Only close on mobile
+        if (window.innerWidth <= 768) {
+          sidebar.classList.remove('mobile-open');
+          sidebarOverlay.classList.remove('mobile-open');
+        }
+      });
+    });
+
+    // Close sidebar when window is resized
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 768) {
+        sidebar.classList.remove('mobile-open');
+        sidebarOverlay.classList.remove('mobile-open');
+      }
+    });
+  }
+}
+
+// Initialize sidebar navigation
+const sidebarNav = new SidebarNavigation();
+
+/* ========================================
+   PAGE LOAD HANDLER - Hide preloader when page is ready
+   ======================================== */
+
+window.addEventListener('load', () => {
+  // Hide preloader after page has fully loaded
+  if (typeof preloader !== 'undefined') {
+    preloader.hide();
+  }
+});
+
+// Also hide preloader on DOMContentLoaded as fallback
+document.addEventListener('DOMContentLoaded', () => {
+  // Slight delay to ensure all resources are loaded
+  setTimeout(() => {
+    if (typeof preloader !== 'undefined' && preloader.isVisible) {
+      preloader.hide();
+    }
+  }, 500);
+});
+
+
