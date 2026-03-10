@@ -3,10 +3,12 @@
    ======================================== */
 
 (function() {
-    // ---------- login form handler using modals ----------
+    // ---------- login form handler ----------
     const form = document.getElementById('loginForm');
+    const loginBtn = form.querySelector('.login-btn');
     let isSubmitting = false; // Prevent multiple submissions
-    form.addEventListener('submit', async (e) => {
+    
+    loginBtn.addEventListener('click', async (e) => {
         e.preventDefault();
         
         // Prevent multiple submissions
@@ -44,18 +46,8 @@
             if (response.ok) {
                 const data = await response.json();
                 isSubmitting = false; // Reset flag for success
-                // Show success dialog before redirecting
-                showConfirm(
-                    `Welcome back, ${username}!\n\nRedirecting to dashboard...`,
-                    () => {
-                        window.location.href = 'dashboard.html';
-                    },
-                    {
-                        title: 'Login Successful',
-                        confirmText: 'Continue',
-                        isDangerous: false
-                    }
-                );
+                // Redirect silently to index
+                window.location.href = 'index.html';
             } else {
                 isSubmitting = false; // Reset flag for error
                 const errorData = await response.json().catch(() => ({ message: 'Login failed' }));

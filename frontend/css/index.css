@@ -1,0 +1,222 @@
+/* ========================================
+   INDEX PAGE SPECIFIC STYLES
+   ======================================== */
+
+/* Dashboard main layout */
+.dashboard-container {
+  flex: 1;
+  padding: 24px 32px;
+  overflow-y: auto;
+  max-width: 100%;
+}
+
+.dashboard-header {
+  margin-bottom: 28px;
+}
+
+.breadcrumb {
+  color: #8b949e;
+  font-size: 0.9rem;
+}
+
+/* Tournament cards */
+.tournament-card {
+  position: relative;
+}
+
+.tournament-status {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 30px;
+  background: rgba(127, 137, 147, 0.2);
+}
+
+.status-active {
+  background: rgba(35, 134, 54, 0.2);
+  color: #3fb950;
+}
+
+.status-registration {
+  background: rgba(246, 145, 19, 0.2);
+  color: #f0883e;
+}
+
+/* Card components */
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.card-icon {
+  font-size: 2rem;
+}
+
+.card-title {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.card-subtitle {
+  color: #8b949e;
+  font-size: 0.8rem;
+}
+
+.card-body {
+  margin: 16px 0;
+}
+
+.tournament-info-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  padding: 5px 0;
+  border-bottom: 1px dashed #30363d;
+}
+
+.info-label {
+  color: #9ca3af;
+}
+
+.info-value {
+  font-weight: 500;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+  color: #7d8590;
+  font-size: 0.8rem;
+}
+
+/* Badge styles */
+.badge {
+  padding: 4px 12px;
+  border-radius: 30px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  background: rgba(56, 139, 253, 0.15);
+  color: #58a6ff;
+}
+
+.badge-warning {
+  background: rgba(246, 145, 19, 0.15);
+  color: #f0883e;
+}
+
+.badge-success {
+  background: rgba(46, 160, 67, 0.15);
+  color: #3fb950;
+}
+
+/* Button styles */
+.btn {
+  background: #1f2937;
+  border: 1px solid #3b434c;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 30px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+.btn-primary {
+  background: #238636;
+  border-color: #2ea043;
+}
+
+.btn-sm {
+  padding: 6px 14px;
+}
+
+/* Table styles */
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.table th {
+  text-align: left;
+  padding: 12px 8px;
+  color: #9ca3af;
+  font-weight: 500;
+  border-bottom: 1px solid #30363d;
+}
+
+.table td {
+  padding: 12px 8px;
+  border-bottom: 1px solid #22272e;
+}
+
+/* ========================================
+   INDEX RESPONSIVE
+   ======================================== */
+
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 100;
+    transform: translateX(-100%);
+    transition: transform 0.2s ease;
+    height: 100vh;
+    width: 260px;
+  }
+
+  .sidebar.show-mobile {
+    transform: translateX(0);
+  }
+
+  .sidebar.collapsed {
+    width: 260px;
+  }
+
+  .sidebar.collapsed .sidebar-nav-label {
+    display: inline-block;
+  }
+
+  .sidebar.collapsed .user-details {
+    display: block;
+  }
+
+  .sidebar.collapsed .logout-btn {
+    display: inline-block;
+  }
+
+  .sidebar-toggle {
+    display: flex;
+  }
+
+  .dashboard-container {
+    padding: 20px 16px;
+  }
+
+  .cards-grid-4 {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .cards-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .cards-grid-4 {
+    grid-template-columns: 1fr;
+  }
+}

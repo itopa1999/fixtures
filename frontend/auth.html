@@ -32,18 +32,18 @@
                 <div class="subhead">authorized personnel only</div>
 
                 <!-- Login form -->
-                <form id="loginForm">
+                <form id="loginForm" method="POST" onsubmit="return false;">
                     <div class="input-group">
                         <label for="username">Username</label>
-                        <input type="text" class="input-field" id="username" name="username" placeholder="admin / manager" autocomplete="off" required>
+                        <input type="text" class="input-field" id="username" placeholder="admin / manager" autocomplete="off" required>
                     </div>
 
                     <div class="input-group">
                         <label for="password">Password</label>
-                        <input type="password" class="input-field" id="password" name="password" placeholder="••••••••" autocomplete="off" required>
+                        <input type="password" class="input-field" id="password" placeholder="••••••••" autocomplete="off" required>
                     </div>
 
-                    <button type="submit" class="login-btn">Log in to dashboard →</button>
+                    <button type="button" class="login-btn">Log in to dashboard →</button>
                 </form>
             </div>
         </div>
