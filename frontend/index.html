@@ -29,6 +29,9 @@
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-brand">
                 <span class="sidebar-brand-icon">⚙️</span>
+                <button class="sidebar-expand-btn-inline" id="sidebarExpandBtnInline" title="Expand sidebar">
+                    <span>›</span>
+                </button>
                 <span>Tournament Hub</span>
                 <button class="sidebar-collapse-btn" id="sidebarCollapseBtn" title="Collapse sidebar">
                     <span>‹</span>
@@ -130,179 +133,9 @@
         </div>
     </div>
 
-    <script>
-        (function() {
-            // ---- 1. Populate dynamic content (simulate main.js) ----
-            // Navigation items
-            const navItems = [
-                { icon: '🏠', label: 'Dashboard', page: 'dashboard' },
-                { icon: '🏆', label: 'Tournaments', page: 'tournaments' },
-                { icon: '👥', label: 'Players', page: 'players' },
-                { icon: '⚔️', label: 'Matches', page: 'matches' },
-                { icon: '📋', label: 'Brackets', page: 'brackets' },
-                { icon: '📈', label: 'Reports', page: 'reports' }
-            ];
-            const navContainer = document.getElementById('sidebarNav');
-            if (navContainer) {
-                navContainer.innerHTML = navItems.map(item => `
-                    <li class="sidebar-nav-item">
-                        <a href="#${item.page}" class="sidebar-nav-link" data-page="${item.page}">
-                            <span class="sidebar-nav-icon">${item.icon}</span>
-                            <span class="sidebar-nav-label">${item.label}</span>
-                        </a>
-                    </li>
-                `).join('');
-                // set active first
-                const firstLink = navContainer.querySelector('.sidebar-nav-link');
-                if (firstLink) firstLink.classList.add('active');
-            }
-
-            // Stats numbers
-            document.getElementById('totalTournaments').innerText = '18';
-            document.getElementById('activeTournaments').innerText = '3';
-            document.getElementById('totalPlayers').innerText = '142';
-            document.getElementById('totalMatches').innerText = '327';
-
-            // Active Tournaments cards (copy from static but add more dynamic feel)
-            const activeContainer = document.getElementById('activeTournamentsContainer');
-            if (activeContainer) {
-                activeContainer.innerHTML = `
-                    <div class="card tournament-card">
-                        <span class="tournament-status status-active">Active</span>
-                        <div class="card-header"><div class="card-icon">🏆</div><div><div class="card-title">Mortal Kombat Championship</div><div class="card-subtitle">Single Elimination</div></div></div>
-                        <div class="card-body">
-                            <div class="tournament-info-row"><span class="info-label">Players:</span><span class="info-value">24 / 32</span></div>
-                            <div class="tournament-info-row"><span class="info-label">Round:</span><span class="info-value">Semi-Finals</span></div>
-                            <div class="tournament-info-row"><span class="info-label">Matches Today:</span><span class="info-value">4 / 4</span></div>
-                        </div>
-                        <div class="card-footer"><span>Started 2h ago</span><span class="badge badge-primary">Details</span></div>
-                    </div>
-                    <div class="card tournament-card">
-                        <span class="tournament-status status-registration">Registration</span>
-                        <div class="card-header"><div class="card-icon">👾</div><div><div class="card-title">Street Fighter 6 Cup</div><div class="card-subtitle">Group Stage + KO</div></div></div>
-                        <div class="card-body">
-                            <div class="tournament-info-row"><span class="info-label">Players:</span><span class="info-value">18 / 24</span></div>
-                            <div class="tournament-info-row"><span class="info-label">Groups:</span><span class="info-value">6 groups</span></div>
-                            <div class="tournament-info-row"><span class="info-label">Start in:</span><span class="info-value">3 days</span></div>
-                        </div>
-                        <div class="card-footer"><span>Created 5d ago</span><span class="badge badge-warning">Manage</span></div>
-                    </div>
-                    <div class="card tournament-card">
-                        <span class="tournament-status status-active">Active</span>
-                        <div class="card-header"><div class="card-icon">🎯</div><div><div class="card-title">Double Elimination Qualifier</div><div class="card-subtitle">Double Elimination</div></div></div>
-                        <div class="card-body">
-                            <div class="tournament-info-row"><span class="info-label">Players:</span><span class="info-value">16 / 16</span></div>
-                            <div class="tournament-info-row"><span class="info-label">Phase:</span><span class="info-value">Winners R2</span></div>
-                            <div class="tournament-info-row"><span class="info-label">Completion:</span><span class="info-value">40%</span></div>
-                        </div>
-                        <div class="card-footer"><span>Started 1d ago</span><span class="badge badge-success">In Progress</span></div>
-                    </div>
-                `;
-            }
-
-            // Matches table
-            const matchesBody = document.getElementById('matchesBody');
-            if (matchesBody) {
-                matchesBody.innerHTML = `
-                    <tr><td><strong>MK Champ</strong></td><td>SonicFox</td><td>2 - 1</td><td>Dragon</td><td>Semi-Finals</td><td><span class="badge badge-success">Completed</span></td></tr>
-                    <tr><td><strong>MK Champ</strong></td><td>Rewind</td><td>1 - 2</td><td>Kombat</td><td>Semi-Finals</td><td><span class="badge badge-success">Completed</span></td></tr>
-                    <tr><td><strong>Double Elim</strong></td><td>Champion</td><td>2 - 0</td><td>Challenger</td><td>Winners R2</td><td><span class="badge badge-success">Completed</span></td></tr>
-                    <tr><td><strong>Double Elim</strong></td><td>Fighter42</td><td>0 - 0</td><td>Warrior</td><td>Winners R2</td><td><span class="badge badge-primary">Scheduled</span></td></tr>
-                    <tr><td><strong>SF6 Cup</strong></td><td>-</td><td>-</td><td>-</td><td>Group A</td><td><span class="badge badge-warning">Pending</span></td></tr>
-                `;
-            }
-
-            // Welcome name
-            document.getElementById('welcomeName').innerText = 'Admin';
-
-            // ---- 2. Sidebar collapsible + mobile logic ----
-            const sidebar = document.getElementById('sidebar');
-            const collapseBtn = document.getElementById('sidebarCollapseBtn');
-            const sidebarToggle = document.getElementById('sidebarToggle');
-            const overlay = document.getElementById('sidebarOverlay');
-            const body = document.body;
-
-            // Collapse/expand on desktop
-            if (collapseBtn) {
-                collapseBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    sidebar.classList.toggle('collapsed');
-                });
-            }
-
-            // Mobile toggle: show sidebar
-            if (sidebarToggle) {
-                sidebarToggle.addEventListener('click', () => {
-                    sidebar.classList.add('show-mobile');
-                    overlay.style.display = 'block';
-                });
-            }
-
-            // Overlay click: hide sidebar
-            if (overlay) {
-                overlay.addEventListener('click', () => {
-                    sidebar.classList.remove('show-mobile');
-                    overlay.style.display = 'none';
-                });
-            }
-
-            // On window resize, if desktop, ensure mobile classes removed
-            window.addEventListener('resize', () => {
-                if (window.innerWidth > 768) {
-                    sidebar.classList.remove('show-mobile');
-                    if (overlay) overlay.style.display = 'none';
-                } else {
-                    // optional: reset collapsed on mobile? we keep as is, but collapse is visual only on mobile (not functional)
-                }
-            });
-
-            // ---- 3. Particles (cool GitHub-style) ----
-            (async function loadParticles() {
-                if (typeof tsParticles !== 'undefined') {
-                    await tsParticles.load({
-                        id: "particles",
-                        options: {
-                            background: { color: "transparent" },
-                            fpsLimit: 60,
-                            particles: {
-                                number: { value: 80, density: { enable: true, area: 800 } },
-                                color: { value: ["#58a6ff", "#ae7cff", "#f78166", "#3fb950"] },
-                                shape: { type: "circle" },
-                                opacity: { value: 0.5, random: true },
-                                size: { value: { min: 1, max: 4 }, random: true },
-                                move: {
-                                    enable: true,
-                                    speed: 0.8,
-                                    direction: "none",
-                                    random: true,
-                                    straight: false,
-                                    outModes: "out"
-                                },
-                                links: {
-                                    enable: true,
-                                    distance: 150,
-                                    color: "#3b434c",
-                                    opacity: 0.2,
-                                    width: 1
-                                }
-                            },
-                            interactivity: {
-                                events: {
-                                    onHover: { enable: true, mode: "grab" },
-                                    onClick: { enable: true, mode: "push" }
-                                },
-                                modes: {
-                                    grab: { distance: 180, links: { opacity: 0.6 } },
-                                    push: { quantity: 4 }
-                                }
-                            },
-                            detectRetina: true
-                        }
-                    });
-                }
-            })();
-
-        })();
-    </script>
+    <!-- Scripts: Core → Particles → Dashboard -->
+    <script src="js/main.js"></script>
+    <script src="js/particles.js"></script>
+    <script src="js/index.js"></script>
 </body>
 </html>

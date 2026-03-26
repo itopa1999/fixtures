@@ -486,6 +486,126 @@ window.ADMIN_URL = "http://127.0.0.1:8000/api/admin/";
 
 
 /* ========================================
+   SIDEBAR & NAVIGATION
+   ======================================== */
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Sidebar collapse/expand on desktop
+  const sidebar = document.getElementById('sidebar');
+  const collapseBtn = document.getElementById('sidebarCollapseBtn');
+  const expandBtn = document.getElementById('sidebarExpandBtnInline');
+  const sidebarToggle = document.getElementById('sidebarToggle');
+  const overlay = document.getElementById('sidebarOverlay');
+
+  if (collapseBtn && sidebar) {
+    collapseBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      sidebar.classList.toggle('collapsed');
+    });
+  }
+
+  if (expandBtn && sidebar) {
+    expandBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      sidebar.classList.remove('collapsed');
+    });
+  }
+
+  // Mobile toggle: show/hide sidebar
+  if (sidebarToggle && sidebar) {
+    sidebarToggle.addEventListener('click', () => {
+      const isVisible = sidebar.classList.toggle('show-mobile');
+      if (overlay) overlay.style.display = isVisible ? 'block' : 'none';
+    });
+  }
+
+  // Overlay click: hide sidebar
+  if (overlay && sidebar) {
+    overlay.addEventListener('click', () => {
+      sidebar.classList.remove('show-mobile');
+      overlay.style.display = 'none';
+    });
+  }
+
+  // On window resize, if desktop, ensure mobile classes removed
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 768) {
+      if (sidebar) sidebar.classList.remove('show-mobile');
+      if (overlay) overlay.style.display = 'none';
+    }
+  });
+
+  // Setup navigation items
+  const navItems = [
+    { icon: '🏠', label: 'Dashboard', page: 'dashboard' },
+    { icon: '🏆', label: 'Tournaments', page: 'tournaments' },
+    { icon: '👥', label: 'Players', page: 'players' },
+    { icon: '⚔️', label: 'Matches', page: 'matches' },
+    { icon: '📋', label: 'Brackets', page: 'brackets' },
+    { icon: '📈', label: 'Reports', page: 'reports' }
+  ];
+  
+  const navContainer = document.getElementById('sidebarNav');
+  if (navContainer) {
+    navContainer.innerHTML = navItems.map(item => `
+      <li class="sidebar-nav-item">
+        <a href="#${item.page}" class="sidebar-nav-link" data-page="${item.page}">
+          <span class="sidebar-nav-icon">${item.icon}</span>
+          <span class="sidebar-nav-label">${item.label}</span>
+        </a>
+      </li>
+    `).join('');
+    const firstLink = navContainer.querySelector('.sidebar-nav-link');
+    if (firstLink) firstLink.classList.add('active');
+  }
+
+  // Load user data from cookies
+  const userName = window.userName || 'User';
+  const userEmail = window.userEmail || '';
+  
+  // Update header with user info
+  const userNameElem = document.getElementById('userName');
+  const userEmailElem = document.getElementById('userEmail');
+  if (userNameElem) userNameElem.textContent = userName;
+  if (userEmailElem) userEmailElem.textContent = userEmail;
+
+  // Update welcome name
+  const welcomeNameElem = document.getElementById('welcomeName');
+  if (welcomeNameElem) welcomeNameElem.textContent = userName;
+
+  // Logout handler
+  const logoutBtn = document.getElementById('logoutBtn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      
+      // Show confirm dialog
+      showConfirm(
+        'Are you sure you want to log out?',
+        () => {
+          // Clear cookies
+          document.cookie = 'access=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+          document.cookie = 'refresh=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+          document.cookie = 'email=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+          document.cookie = 'name=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+          document.cookie = 'group=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+          
+          // Redirect to login
+          window.location.href = 'auth.html';
+        },
+        {
+          title: 'Logout',
+          confirmText: 'Yes, Logout',
+          isDangerous: true
+        }
+      );
+    });
+  }
+});
+
+/* ========================================
    PAGE LOAD HANDLER - Hide preloader when page is ready
    ======================================== */
 
